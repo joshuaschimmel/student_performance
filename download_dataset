@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+echo -e "running download script for dataset...\n"
+
+dest="data"
+
+if [[ ! -d $dest ]]; then
+    echo "creating destination folder"
+    mkdir -p $dest 
+fi
+
+if [[ -f "${dest}/student-performance.zip"  ]]; then
+    echo "zip archive already exists, exiting."
+    exit 0
+fi
+
+curl -L -o "${dest}/student-performance.zip"\
+  https://www.kaggle.com/api/v1/datasets/download/nikhil7280/student-performance-multiple-linear-regression
+
+unzip "${dest}/student-performance.zip" -d $dest
+
+
