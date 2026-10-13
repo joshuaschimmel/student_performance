@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+# get uuid for globally unique resources via sub shell
+guid=$(cat /proc/sys/kernel/random/uuid)
+# remove dashes with parameter expansion with pattern matching
+dedashed=${guid//[-]/}
+# get first 18 digits with substring expansion
+suffix=${suffix:0:18}
+
+# create constants
+RESOURCE_GROUP="rg-ml_students-${suffix}"
+WORKSPACE_NAME="mlw-ml_students-${suffix}"
+RESOURCE_PROVIDER="Microsoft.MachineLearningServices"
+REGION="westeurope"
+COMPUTE_INSTANCE="ci${suffix}"
+COMPUTE_CLUSTER="aml-cluster"
+
+# enable ML in subscription
+echo "Add provider ${RESOURCE_PROVIDER}"
+az provider register --namespace $RESOURCE_PROVIDER
+
+# create resource group
+echo "Creating resource group ${RESOURCE_GROUP}"
+az group create --name $RESOURCE_GROUP --location $REGION
+# set rg as default for following calls because me lazy
+az configure --defaults group=$RESOURCE_GROUP
+
+# create alm workspace
+echo "Creating Machine Learning Workspace ${WORKSPACE_NAME}"
+az ml workspace create --name $WORKSPACE_NAME
+az configure --defaults workspace=$WORKSPACE_NAME
+
+# compute instances are tailored vms to run python and notebooks in the mlw
+# not needed if jobs are only submitted programmatically
+#echo "Creating compute instance ${COMPUTE_INSTANCE}"
+#az ml compute create --name $COMPUTE_INSTANCE --size STANDARD_DS11_V2 --type ComputeInstance 
+
+# compute clusters are the same VMs, but for programmatic training (i.e. batch jobs) and may scale to cover need
+# min_nodes should always be 0 to allow the cluster to shut as many vms as possible to save on cost
+# DV2 series vms are slated for retirement in 2028
+echo "Creating compute cluster ${COMPUTE_CLUSTER}"
+az compute create --name $COMPUTE_CLUSTER --min_instances 0 --max_instances 1 --size STANDARD_DS11_V2 --type amlcompute
+
+# create datasets, loading local data into azure
+echo "Creating training dataset"
+az ml data create --type uri_file --name "students-data" --path data/Student_Performance.csv
+
