@@ -33,3 +33,11 @@ use azure cli to provision resources
 
 For this example project only a dev environment, nothing live for the public.
 Results should be documented in a notebook.
+
+## Notes and thinkings
+
+* how to submit jobs?
+* jobs should run in cluster
+* use command jobs or automl?
+* should be triggerable from GitHub Actions
+* 
