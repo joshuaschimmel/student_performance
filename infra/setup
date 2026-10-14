@@ -32,16 +32,18 @@ az configure --defaults workspace=$WORKSPACE_NAME
 
 # compute instances are tailored vms to run python and notebooks in the mlw
 # not needed if jobs are only submitted programmatically
-#echo "Creating compute instance ${COMPUTE_INSTANCE}"
-#az ml compute create --name $COMPUTE_INSTANCE --size STANDARD_DS11_V2 --type ComputeInstance 
+echo "Creating compute instance ${COMPUTE_INSTANCE}"
+az ml compute create --name $COMPUTE_INSTANCE --size STANDARD_DS11_V2 --type ComputeInstance 
 
 # compute clusters are the same VMs, but for programmatic training (i.e. batch jobs) and may scale to cover need
 # min_nodes should always be 0 to allow the cluster to shut as many vms as possible to save on cost
 # DV2 series vms are slated for retirement in 2028
 echo "Creating compute cluster ${COMPUTE_CLUSTER}"
-az compute create --name $COMPUTE_CLUSTER --min_instances 0 --max_instances 1 --size STANDARD_DS11_V2 --type amlcompute
+az compute create --name $COMPUTE_CLUSTER --min_instances 0 --max_instances 1 --size STANDARD_DS11_V2 --type AmlCompute
 
 # create datasets, loading local data into azure
 echo "Creating training dataset"
+# to use MLTable definition
+#az ml data create --type mltable --name "students-training" --path data/
 az ml data create --type uri_file --name "students-data" --path data/Student_Performance.csv
 
