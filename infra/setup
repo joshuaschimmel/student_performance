@@ -47,3 +47,8 @@ echo "Creating training dataset"
 #az ml data create --type mltable --name "students-training" --path data/
 az ml data create --type uri_file --name "students-data" --path data/Student_Performance.csv
 
+# # create registry to promote models to
+# TODO check if a single env does not already have all of this
+# TODO sed params from here into 
+# echo "Creating registry ${REGISTRY_NAME}"
+# az ml registry create --name $REGISTRY_NAME
