@@ -5,15 +5,36 @@ guid=$(cat /proc/sys/kernel/random/uuid)
 # remove dashes with parameter expansion with pattern matching
 dedashed=${guid//[-]/}
 # get first 18 digits with substring expansion
-suffix=${suffix:0:18}
+suffix=${dedashed:0:18}
 
 # create constants
-RESOURCE_GROUP="rg-ml_students-${suffix}"
-WORKSPACE_NAME="mlw-ml_students-${suffix}"
+RESOURCE_GROUP="rg-mlops-${suffix}"
+WORKSPACE_NAME="mlw-mlops-${suffix}"
 RESOURCE_PROVIDER="Microsoft.MachineLearningServices"
-REGION="westeurope"
-COMPUTE_INSTANCE="ci${suffix}"
-COMPUTE_CLUSTER="aml-cluster"
+REGION="germanywestcentral"
+COMPUTE_INSTANCE="ci-mlops"
+COMPUTE_CLUSTER="cluster-mlops"
+
+
+echo "This script will create the following:"
+echo "In region $REGION"
+echo "resource group $RESOURCE_GROUP"
+echo "aml workspace $WORKSPACE_NAME"
+echo "aml compute instance $COMPUTE_INSTANCE"
+echo "aml compute cluster $COMPUTE_CLUSTER"
+
+
+# confirm
+while true ; do
+    read -r -p "is this correct? (yes) " result
+    
+    if [[ $result != 'yes' ]]; then
+        echo "received ${result}, not yes. exiting..."
+        exit 0
+    fi
+    break
+done
+
 
 # enable ML in subscription
 echo "Add provider ${RESOURCE_PROVIDER}"
@@ -30,16 +51,19 @@ echo "Creating Machine Learning Workspace ${WORKSPACE_NAME}"
 az ml workspace create --name $WORKSPACE_NAME
 az configure --defaults workspace=$WORKSPACE_NAME
 
+# compute clusters are the same VMs, but for programmatic training (i.e. batch jobs) and may scale to cover need
+# min_nodes should always be 0 to allow the cluster to shut as many vms as possible to save on cost
+# using STANDARD_E4DS_V4, because its currently the only size available in free tier
+# DV2 series vms are slated for retirement in 2028
+echo "Creating compute cluster ${COMPUTE_CLUSTER}"
+az ml compute create --name $COMPUTE_CLUSTER --size STANDARD_E4DS_V4 --type AmlCompute --min_instances 0 --max_instances 2
+
 # compute instances are tailored vms to run python and notebooks in the mlw
 # not needed if jobs are only submitted programmatically
 echo "Creating compute instance ${COMPUTE_INSTANCE}"
-az ml compute create --name $COMPUTE_INSTANCE --size STANDARD_DS11_V2 --type ComputeInstance 
+az ml compute create --name $COMPUTE_INSTANCE --size STANDARD_E4DS_V4 --type ComputeInstance 
 
-# compute clusters are the same VMs, but for programmatic training (i.e. batch jobs) and may scale to cover need
-# min_nodes should always be 0 to allow the cluster to shut as many vms as possible to save on cost
-# DV2 series vms are slated for retirement in 2028
-echo "Creating compute cluster ${COMPUTE_CLUSTER}"
-az compute create --name $COMPUTE_CLUSTER --min_instances 0 --max_instances 1 --size STANDARD_DS11_V2 --type AmlCompute
+
 
 # create datasets, loading local data into azure
 echo "Creating training dataset"
