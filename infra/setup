@@ -56,7 +56,7 @@ az configure --defaults workspace=$WORKSPACE_NAME
 # using STANDARD_E4DS_V4, because its currently the only size available in free tier
 # DV2 series vms are slated for retirement in 2028
 echo "Creating compute cluster ${COMPUTE_CLUSTER}"
-az ml compute create --name $COMPUTE_CLUSTER --size STANDARD_E4DS_V4 --type AmlCompute --min_instances 0 --max_instances 2
+az ml compute create --name $COMPUTE_CLUSTER --size STANDARD_E4DS_V4 --type AmlCompute --min-instances 0 --max-instances 2
 
 # compute instances are tailored vms to run python and notebooks in the mlw
 # not needed if jobs are only submitted programmatically

@@ -49,7 +49,7 @@ def main():
     
     args = parse_args()
     
-    experiment_name = '02-track_with_mlflow'
+    experiment_name = 'student_performance'
     mlflow.set_experiment(experiment_name)
     mlflow.sklearn.autolog()
 
