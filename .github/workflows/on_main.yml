@@ -28,12 +28,23 @@ jobs:
       with:
         creds: ${{secrets.AZURE_CREDENTIALS}}
 
-    - name: Steam command job via CLI
+    - name: Trigger command job via CLI
       run: |
+        JOB_NAME="mlops-run-${{ github.run_id }}"
+
+        az --version
+        echo $(az --version)
         az ml job create -f src/job.yaml \
         --resource-group ${{vars.AZURE_RESOURCE_GROUP}} \
         --workspace-name ${{vars.AZURE_WORKSPACE_NAME}} \
-        --stream
+        --query name -o tsv
+
+        echo "job_name=$JOB_NAME" >> "$GITHUB_OUTPUT"
+
+    - name: Query MLW for logs
+      run: |
+        az ml job stream --name "${{ steps.test-model.outputs.job_name }}"
+
 
     # - name: extract metrics
 
