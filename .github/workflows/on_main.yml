@@ -33,7 +33,7 @@ jobs:
         az ml job create -f src/job.yaml \
         --resource-group ${{vars.AZURE_RESOURCE_GROUP}} \
         --workspace-name ${{vars.AZURE_WORKSPACE_NAME}} \
-        --stream | tee training_output.log
+        --stream
 
     # - name: extract metrics
 
