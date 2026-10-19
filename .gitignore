@@ -221,3 +221,7 @@ __marimo__/
 
 # data directory
 data/
+
+# ml flow
+mlflow.db
+mlruns/
