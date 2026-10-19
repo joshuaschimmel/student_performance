@@ -225,3 +225,6 @@ data/
 # ml flow
 mlflow.db
 mlruns/
+
+# azure workspace id
+config.json
