@@ -42,7 +42,9 @@ jobs:
 
     - name: Query MLW for logs
       run: |
-        az ml job stream --name "${{ steps.trigger.outputs.job_name }}"
+        az ml job stream --name "${{ steps.trigger.outputs.job_name }}" \
+        --resource-group ${{vars.AZURE_RESOURCE_GROUP}} \
+        --workspace-name ${{vars.AZURE_WORKSPACE_NAME}}
 
 
     # - name: extract metrics
