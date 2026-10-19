@@ -1,5 +1,7 @@
 name: "Manually trigger workflow for testing"
 
+on: workflow_dispatch
+
 jobs:
   test-flow:
     runs-on: ubuntu-latest
