@@ -34,6 +34,7 @@ jobs:
         JOB_NAME="mlops-run-${{ github.run_id }}"
 
         az ml job create -f src/job.yaml \
+        --name "$JOB_NAME" \
         --resource-group ${{vars.AZURE_RESOURCE_GROUP}} \
         --workspace-name ${{vars.AZURE_WORKSPACE_NAME}} \
         --query name -o tsv
