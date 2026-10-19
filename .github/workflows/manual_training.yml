@@ -1,10 +1,7 @@
 name: "Manually trigger workflow for testing"
 
-on:
-
-
 jobs:
-  train:
+  test-flow:
     runs-on: ubuntu-latest
     steps:
     - name: Check out main branch
