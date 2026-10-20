@@ -1,4 +1,4 @@
-name: "Manually trigger workflow for testing"
+name: "Manually trigger training"
 
 on: workflow_dispatch
 
@@ -6,8 +6,8 @@ jobs:
   test-flow:
     runs-on: ubuntu-latest
     steps:
-    - name: Check out main branch
-      uses: actions/checkout@main
+    - name: Check out default branch
+      uses: actions/checkout@v7
     - name: Install az ml
       run: az extension add -n ml -y
     - name: Login to azure
