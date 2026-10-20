@@ -43,10 +43,12 @@ jobs:
 
     - name: Wait for MLW to finish run
       run: |
+        
+
         # in the current CLI, this always exits with 1
         results=$(az ml job stream --name "${{ steps.trigger.outputs.job_name }}" \
         --resource-group ${{vars.AZURE_RESOURCE_GROUP}} \
-        --workspace-name ${{vars.AZURE_WORKSPACE_NAME}})
+        --workspace-name ${{vars.AZURE_WORKSPACE_NAME}}) || true
         # send exit 0 to continue with pipeline
         exit 0
 
