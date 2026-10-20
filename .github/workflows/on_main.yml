@@ -58,7 +58,7 @@ jobs:
       run: |
         az ml job download --name "${{ steps.trigger.outputs.job_name }}" \
           --resource-group ${{vars.AZURE_RESOURCE_GROUP}} \
-          --workspace-name ${{vars.AZURE_WORKSPACE_NAME}})
+          --workspace-name ${{vars.AZURE_WORKSPACE_NAME}}
 
         # downloads all artifacts
         mse=$(cat artifacts/user_logs/std_log.txt | grep MSE)
