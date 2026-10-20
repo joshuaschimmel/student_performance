@@ -46,7 +46,7 @@ jobs:
         status=0
 
         while [[ $status != 'Completed' ]]; do
-          status=$(az ml job show
+          status=$(az ml job show \
             --name "${{ steps.trigger.outputs.job_name }}" \
             --resource-group ${{vars.AZURE_RESOURCE_GROUP}} \
             --workspace-name ${{vars.AZURE_WORKSPACE_NAME}} \
