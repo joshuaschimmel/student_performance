@@ -1,13 +1,7 @@
-name: "Trigger workflow on "
+name: "Manual 'PR comment'"
 
 on: 
   workflow_dispatch:
-  pull_request:
-    branches:
-      - main
-    paths:
-      - 'src/train_model.py'
-      - 'src/job.yaml'
 
 permissions:
   contents: read
